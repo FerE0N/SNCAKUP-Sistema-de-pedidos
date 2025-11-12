@@ -1,6 +1,5 @@
+# controller/controller_order.py
 from model.order import Order
-import qrcode
-import os
 
 class ControllerOrder:
     def __init__(self):
@@ -11,10 +10,5 @@ class ControllerOrder:
         self.orders.append(order)
         return order
 
-    def generate_qr(self, order_id):
-        data = f"Order ID: {order_id} - Confirmed"
-        img = qrcode.make(data)
-        path = f"static/qrcodes/{order_id}.png"
-        os.makedirs("static/qrcodes", exist_ok=True)
-        img.save(path)
-        return path
+    def get_all_orders(self):
+        return self.orders

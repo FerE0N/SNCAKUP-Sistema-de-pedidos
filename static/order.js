@@ -1,111 +1,175 @@
-// Client-side logic: manejar items, eliminar, confirmación y petición al servidor
-let items = [];
+// static/order.js
 
-const productListEl = document.getElementById("product-list");
-const totalEl = document.getElementById("total");
-const qrArea = document.getElementById("qr-area");
-const productListServer = document.getElementById("product-list-server");
+let cart = [];
 
-// Cargar productos desde servidor
-async function loadServerProducts() {
-    try {
-        const res = await fetch("/api/products");
-        const prods = await res.json();
-        productListServer.innerHTML = "";
-        prods.forEach(p => {
-            const li = document.createElement("li");
-            li.innerHTML = `<span>${p.name} - $${p.price.toFixed(2)}</span>
-                      <div>
-                        <button class="small" onclick='addItemFromServer("${p.id}", "${p.name}", ${p.price})'>Agregar</button>
-                      </div>`;
-            productListServer.appendChild(li);
+// 🧭 Navegación entre secciones
+document.addEventListener("DOMContentLoaded", () => {
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const sections = document.querySelectorAll(".bento-box");
+    const btnLoadOrders = document.getElementById("btnLoadOrders");
+    const ordersContainer = document.getElementById("ordersContainer");
+
+    navButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            sections.forEach((sec) => sec.classList.add("hidden"));
+            document.getElementById(targetId).classList.remove("hidden");
+
+            // Cambiar el botón activo visualmente
+            navButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // Si entra a pedidos registrados, carga los pedidos
+            if (targetId === "section-history") loadOrders();
         });
-    } catch (e) {
-        console.error("No se pudieron cargar productos:", e);
-    }
-}
-loadServerProducts();
-
-// Añadir desde lista server
-function addItemFromServer(id, name, price) {
-    items.push({ id, name, price });
-    renderList();
-}
-
-// Añadir manual
-document.getElementById("add-manual").addEventListener("click", () => {
-    const name = document.getElementById("new-name").value.trim();
-    const price = parseFloat(document.getElementById("new-price").value);
-    if (!name || isNaN(price)) {
-        alert("Nombre y precio válidos");
-        return;
-    }
-    const id = crypto.randomUUID().slice(0, 8);
-    items.push({ id, name, price });
-    document.getElementById("new-name").value = "";
-    document.getElementById("new-price").value = "";
-    renderList();
-});
-
-// Renderizar lista de la orden
-function renderList() {
-    productListEl.innerHTML = "";
-    items.forEach((p, idx) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<span>${p.name} - $${p.price.toFixed(2)}</span>
-                    <div>
-                      <button class="small" onclick="removeItem('${p.id}')">Eliminar</button>
-                    </div>`;
-        productListEl.appendChild(li);
     });
-    updateTotal();
-}
 
-window.removeItem = function (id) {
-    items = items.filter(i => i.id !== id);
-    renderList();
-}
-
-function updateTotal() {
-    const total = items.reduce((s, p) => s + Number(p.price), 0);
-    totalEl.innerText = `Total: $${total.toFixed(2)}`;
-}
-
-// Confirmar orden: enviar al servidor para crear orden y QR
-document.getElementById("confirm-btn").addEventListener("click", async () => {
-    if (items.length === 0) {
-        alert("La orden está vacía.");
-        return;
-    }
-    const clientName = document.getElementById("client-name").value || "Invitado";
-    const payload = {
-        client: { id_client: "c_guest", name: clientName },
-        items: items
-    };
-
-    try {
-        const res = await fetch("/api/confirm", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+    // Asignar eventos a botones "Agregar"
+    const addButtons = document.querySelectorAll(".btn-add");
+    addButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const name = btn.dataset.name;
+            const price = parseFloat(btn.dataset.price);
+            addToCart(name, price);
         });
-        const data = await res.json();
-        if (data.error) {
-            alert("Error: " + data.error);
-            return;
-        }
+    });
 
-        // Mostrar QR y resumen
-        qrArea.innerHTML = `<h3>Orden confirmada (ID: ${data.order_id})</h3>
-                        <p>Total: $${Number(data.total).toFixed(2)}</p>
-                        <img src="${data.qr_url}" alt="QR de la orden">`;
+    // Botón de confirmar pedido
+    document.getElementById("btnConfirmOrder").addEventListener("click", confirmOrder);
 
-        // Vaciar items locales
-        items = [];
-        renderList();
+    if (btnLoadOrders) {
+        btnLoadOrders.addEventListener("click", async () => {
+            try {
+                const response = await fetch("/get_orders");
+                const orders = await response.json();
 
-    } catch (e) {
-        console.error(e);
-        alert("Error al confirmar la orden.");
+                if (!orders.length) {
+                    ordersContainer.innerHTML = "<p>No hay pedidos registrados.</p>";
+                    return;
+                }
+
+                ordersContainer.innerHTML = ""; // Limpia contenido anterior
+
+                orders.forEach(order => {
+                    const div = document.createElement("div");
+                    div.classList.add("order-card");
+                    div.innerHTML = `
+            <h3>${order.client_name}</h3>
+            <p><strong>ID:</strong> ${order.id}</p>
+            <ul>${order.items.map(i => `<li>${i.name} - $${i.price}</li>`).join("")}</ul>
+            <img src="/static/qrcodes/${order.qr_filename}" alt="QR de ${order.client_name}">
+          `;
+                    ordersContainer.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Error al cargar pedidos:", error);
+                ordersContainer.innerHTML = "<p>Error al cargar pedidos.</p>";
+            }
+        });
     }
 });
+
+// 🛒 Agregar al carrito
+function addToCart(name, price) {
+    const item = { name, price };
+    cart.push(item);
+    renderCart();
+}
+
+// 🧾 Mostrar carrito actual
+function renderCart() {
+    const cartList = document.getElementById("cart-items");
+    cartList.innerHTML = "";
+
+    if (cart.length === 0) {
+        cartList.innerHTML = "<li>Carrito vacío</li>";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${item.name} - $${item.price}`;
+
+        const btnRemove = document.createElement("button");
+        btnRemove.textContent = "❌";
+        btnRemove.classList.add("btn-remove");
+        btnRemove.addEventListener("click", () => removeFromCart(index));
+
+        li.appendChild(btnRemove);
+        cartList.appendChild(li);
+    });
+}
+
+// ❌ Eliminar producto del carrito
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+}
+
+// ✅ Confirmar pedido
+function confirmOrder() {
+    if (cart.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+    }
+
+    const clientName = document.getElementById("clientName").value.trim();
+    if (!clientName) {
+        alert("Por favor ingresa tu nombre.");
+        return;
+    }
+
+    fetch("/confirm_order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            items: cart,
+            client_name: clientName,
+        }),
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.success) {
+                document.getElementById("qrSection").classList.remove("hidden");
+                document.getElementById("qrImage").src = `/static/qrcodes/${data.qr_filename}`;
+                alert("✅ Pedido confirmado correctamente.");
+                cart = [];
+                renderCart();
+            } else {
+                alert("⚠️ No se pudo confirmar el pedido.");
+            }
+        })
+        .catch((err) => {
+            console.error("Error al confirmar pedido:", err);
+        });
+}
+
+// 📦 Cargar pedidos guardados
+function loadOrders() {
+    fetch("/orders")
+        .then((res) => res.json())
+        .then((orders) => {
+            const container = document.getElementById("ordersContainer");
+            container.innerHTML = "";
+
+            if (orders.length === 0) {
+                container.innerHTML = "<p>No hay pedidos registrados aún.</p>";
+                return;
+            }
+
+            orders.forEach((order) => {
+                const div = document.createElement("div");
+                div.classList.add("order-card");
+                div.innerHTML = `
+          <h3>Orden #${order.id}</h3>
+          <p><strong>Cliente:</strong> ${order.client_name}</p>
+          <ul>${order.items
+                        .map((item) => `<li>${item.name} - $${item.price}</li>`)
+                        .join("")}</ul>
+          <img src="/static/qrcodes/${order.qr_filename}" class="order-qr">
+        `;
+                container.appendChild(div);
+            });
+        })
+        .catch((err) => console.error("Error al cargar pedidos:", err));
+}

@@ -1,27 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Sistema de Órdenes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <title>Sistema de Pedidos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="{{ url_for('static', filename='order.js') }}" defer></script>
 </head>
-<body class="bento-grid">
-    <div class="bento-box">
-        <h1>🍱 Sistema de Toma de Órdenes</h1>
-        <form action="/create_order" method="POST">
-            <label>Nombre del Cliente:</label>
-            <input type="text" name="client_name" required>
-            <button type="submit">Crear Orden</button>
-        </form>
+<body class="bento-container">
+
+  <!-- 🟠 HEADER GLOBAL -->
+  <header>SNACKUP</header>
+
+  <!-- 🧭 Barra de navegación -->
+  <nav class="bento-nav">
+    <button class="nav-btn" data-target="section-menu">Menú</button>
+    <button class="nav-btn" data-target="section-order">Confirmar Pedido</button>
+    <button class="nav-btn" data-target="section-history">Pedidos Registrados</button>
+  </nav>
+
+  <!-- 🧩 Sección 1: Menú principal -->
+  <section id="section-menu" class="bento-box active">
+    <h1>Menú de Productos</h1>
+    <div id="product-list" class="bento-subbox">
+      <div class="product-item">
+        <span class="product-name">Tazón Bento de Pollo</span>
+        <span class="product-price">$80</span>
+        <button class="btn-add" data-name="Tazón Bento de Pollo" data-price="80">Agregar</button>
+      </div>
+      <div class="product-item">
+        <span class="product-name">Tazón Bento Vegetariano</span>
+        <span class="product-price">$75</span>
+        <button class="btn-add" data-name="Tazón Bento Vegetariano" data-price="75">Agregar</button>
+      </div>
+      <div class="product-item">
+        <span class="product-name">Tazón Bento de Res</span>
+        <span class="product-price">$90</span>
+        <button class="btn-add" data-name="Tazón Bento de Res" data-price="90">Agregar</button>
+      </div>
     </div>
 
-    <div class="bento-box">
-        <h2>Productos Disponibles</h2>
-        <ul>
-            {% for product in products %}
-            <li>{{ product.name }} - ${{ product.price }}</li>
-            {% endfor %}
-        </ul>
+    <div class="bento-subbox">
+      <h2>Carrito actual</h2>
+      <ul id="cart-items"></ul>
     </div>
+  </section>
+
+  <!-- 🧾 Sección 2: Confirmar pedido -->
+  <section id="section-order" class="bento-box hidden">
+    <h1>Confirmación de Pedido</h1>
+    <div class="bento-subbox">
+      <label for="clientName">Nombre del cliente:</label>
+      <input type="text" id="clientName" placeholder="Tu nombre" required>
+    </div>
+    <div class="bento-subbox">
+      <button id="btnConfirmOrder" class="btn-primary">Confirmar Pedido</button>
+    </div>
+    <div id="qrSection" class="bento-subbox hidden">
+      <h3>Tu código QR:</h3>
+      <img id="qrImage" alt="Código QR de pedido">
+    </div>
+  </section>
+
+  <!-- 📜 Sección 3: Historial de pedidos -->
+  <section id="section-history" class="bento-box hidden">
+    <h1>Pedidos Registrados</h1>
+    <div class="bento-subbox">
+      <button id="btnLoadOrders" class="btn-primary">Cargar pedidos</button>
+    </div>
+    <div class="orders-container" id="ordersContainer">
+      <p>No hay pedidos cargados aún.</p>
+    </div>
+  </section>
+
 </body>
 </html>

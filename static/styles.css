@@ -1,61 +1,311 @@
-body {
+/* === Fuente general === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+body.bento-container {
     font-family: 'Poppins', sans-serif;
-    background-color: #f2f2f2;
+    background-color: #f8f8f8;
     margin: 0;
+    padding: 0;
+    padding-top: 140px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 🎨 Header global fijo */
+header {
+    width: 100%;
+    background: #ff914d;
+    color: white;
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: bold;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+}
+
+/* === Navegación === */
+.bento-nav {
+    display: flex;
     justify-content: center;
+    gap: 1rem;
+    background: #ffffff;
+    border-radius: 2rem;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+    /* ✅ Ajuste clave: se fija debajo del header */
+    position: fixed;
+    top: 70px;
+    /* altura del header */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
 }
 
-.bento-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 30px;
+.nav-btn {
+    background: #ff8360;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
 }
 
+.nav-btn:hover {
+    background: #e86f4c;
+}
+
+/* === Secciones tipo Bento === */
 .bento-box {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    transition: transform 0.2s ease;
+    background: #fff;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    width: 80%;
+    max-width: 900px;
+    transition: all 0.3s ease;
 }
 
-.bento-box:hover {
-    transform: scale(1.03);
+.hidden {
+    display: none;
 }
 
-button,
-.confirm-btn {
-    background-color: #ff7b00;
+.bento-subbox {
+    background: #f9fafc;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* === Productos === */
+.product-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.product-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.product-price {
+    color: #666;
+    margin: 0 1rem;
+}
+
+.btn-add {
+    background: #ff8360;
     color: white;
     border: none;
-    border-radius: 10px;
-    padding: 10px 15px;
+    border-radius: 0.8rem;
+    padding: 0.4rem 0.9rem;
     cursor: pointer;
-    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.2s;
 }
 
-button:hover,
-.confirm-btn:hover {
-    background-color: #ff9100;
+.btn-add:hover {
+    background: #e86f4c;
 }
 
-input,
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    border-radius: 10px;
+.btn-remove {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    margin-left: 8px;
+    cursor: pointer;
+    padding: 2px 6px;
+    transition: 0.2s;
+}
+
+.btn-remove:hover {
+    background-color: #e04646;
+}
+
+
+/* === Carrito === */
+#cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#cart-items li {
+    background: #fff;
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* === Confirmación === */
+.btn-primary {
+    background: #5cb85c;
+    border: none;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #4cae4c;
+}
+
+/* === Texto y jerarquía === */
+h1 {
+    font-size: 1.7rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+h2 {
+    font-size: 1.3rem;
+    color: #444;
+}
+
+h3 {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+p,
+label,
+input {
+    font-size: 1rem;
+}
+
+/* === QR === */
+#qrImage {
+    display: block;
+    margin-top: 1rem;
+    width: 150px;
+    height: 150px;
+    border-radius: 0.5rem;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.order-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+}
+
+.order-header {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.order-items {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.order-items li {
+    padding: 0.3rem 0;
+    color: #444;
+}
+
+.order-qr {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin-top: 0.5rem;
+    border-radius: 0.5rem;
     border: 1px solid #ddd;
 }
 
-.delete-btn {
-    background-color: #e74c3c;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
+/* 🧱 Contenedor de tarjetas */
+.orders-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+/* 💳 Tarjeta individual */
+.order-card {
+    background-color: #ffffffcc;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    width: 250px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 🖼 Imagen del QR */
+.order-card img {
+    display: block;
+    margin: 10px auto;
+    width: 120px;
+    border-radius: 8px;
+}
+
+/* 🧾 Texto dentro de la tarjeta */
+.order-card h3 {
+    margin-bottom: 0.5rem;
+    color: #222;
+    text-align: center;
+}
+
+.order-card p {
+    margin: 0.3rem 0;
+    color: #333;
+}
+
+.order-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.order-card li {
+    background: #f6f6f6;
+    padding: 4px 8px;
+    margin: 2px 0;
+    border-radius: 6px;
 }

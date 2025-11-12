@@ -1,3 +1,18 @@
-Flask>=2.0
-qrcode[pil]>=7.3
-Pillow>=9.0
+# --- Core del framework web ---
+Flask==3.0.3
+
+# --- Generación de códigos QR ---
+qrcode==7.4.2
+pillow==10.4.0   # Dependencia necesaria para qrcode
+
+# --- Utilidades y manejo de datos ---
+itsdangerous==2.2.0
+Jinja2==3.1.4
+Werkzeug==3.0.3
+
+# --- Formato y validación JSON ---
+simplejson==3.19.2
+
+# --- Desarrollo y debugging ---
+flask-cors==4.0.0  # Permite comunicación JS ↔ Flask sin errores de CORS
+python-dotenv==1.0.1  # (Opcional) Para manejar variables de entorno
