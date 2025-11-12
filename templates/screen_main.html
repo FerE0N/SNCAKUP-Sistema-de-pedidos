@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Órdenes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="bento-grid">
+    <div class="bento-box">
+        <h1>🍱 Sistema de Toma de Órdenes</h1>
+        <form action="/create_order" method="POST">
+            <label>Nombre del Cliente:</label>
+            <input type="text" name="client_name" required>
+            <button type="submit">Crear Orden</button>
+        </form>
+    </div>
+
+    <div class="bento-box">
+        <h2>Productos Disponibles</h2>
+        <ul>
+            {% for product in products %}
+            <li>{{ product.name }} - ${{ product.price }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
