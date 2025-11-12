@@ -13,4 +13,4 @@ class Order:
         self.products = [p for p in self.products if p.name != product_name]
 
     def total(self):
-        return sum(p.price for p in self.products)
+        return sum(p.get_price() for p in self.products)
