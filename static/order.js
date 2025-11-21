@@ -125,6 +125,7 @@ function confirmOrder() {
         body: JSON.stringify({
             items: cart,
             client_name: clientName,
+            discount_type: document.getElementById("discountType").value,
         }),
     })
         .then((res) => res.json())
@@ -132,7 +133,7 @@ function confirmOrder() {
             if (data.success) {
                 document.getElementById("qrSection").classList.remove("hidden");
                 document.getElementById("qrImage").src = `/static/qrcodes/${data.qr_filename}`;
-                alert("✅ Pedido confirmado correctamente.");
+                alert(`✅ Pedido confirmado. Total: $${data.total.toFixed(2)}`);
                 cart = [];
                 renderCart();
             } else {

@@ -22,21 +22,13 @@
   <section id="section-menu" class="bento-box active">
     <h1>Menú de Productos</h1>
     <div id="product-list" class="bento-subbox">
+      {% for product in products %}
       <div class="product-item">
-        <span class="product-name">Tazón Bento de Pollo</span>
-        <span class="product-price">$80</span>
-        <button class="btn-add" data-name="Tazón Bento de Pollo" data-price="80">Agregar</button>
+        <span class="product-name">{{ product.get_description() }}</span>
+        <span class="product-price">${{ product.get_price() }}</span>
+        <button class="btn-add" data-name="{{ product.name }}" data-price="{{ product.get_price() }}">Agregar</button>
       </div>
-      <div class="product-item">
-        <span class="product-name">Tazón Bento Vegetariano</span>
-        <span class="product-price">$75</span>
-        <button class="btn-add" data-name="Tazón Bento Vegetariano" data-price="75">Agregar</button>
-      </div>
-      <div class="product-item">
-        <span class="product-name">Tazón Bento de Res</span>
-        <span class="product-price">$90</span>
-        <button class="btn-add" data-name="Tazón Bento de Res" data-price="90">Agregar</button>
-      </div>
+      {% endfor %}
     </div>
 
     <div class="bento-subbox">
@@ -51,6 +43,14 @@
     <div class="bento-subbox">
       <label for="clientName">Nombre del cliente:</label>
       <input type="text" id="clientName" placeholder="Tu nombre" required>
+    </div>
+    <div class="bento-subbox">
+      <label for="discountType">Descuento:</label>
+      <select id="discountType">
+        <option value="none">Ninguno</option>
+        <option value="student">Estudiante (10%)</option>
+        <option value="happy_hour">Happy Hour (20%)</option>
+      </select>
     </div>
     <div class="bento-subbox">
       <button id="btnConfirmOrder" class="btn-primary">Confirmar Pedido</button>
