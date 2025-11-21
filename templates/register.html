@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - SNACKUP</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="bento-container center-content">
+
+    <div class="bento-box login-box">
+        <h1>Registro SNACKUP</h1>
+        <form action="/register" method="POST">
+            <div class="bento-subbox">
+                <label for="username">Usuario:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="bento-subbox">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="bento-subbox">
+                <button type="submit" class="btn-primary">Registrarse</button>
+            </div>
+            {% if error %}
+            <p class="error-msg">{{ error }}</p>
+            {% endif %}
+            {% if success %}
+            <p class="success-msg">{{ success }} <a href="/login">Ir al Login</a></p>
+            {% endif %}
+        </form>
+        <p><a href="/login">Volver al Login</a></p>
+    </div>
+
+</body>
+
+</html>

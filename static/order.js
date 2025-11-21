@@ -57,7 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <h3>${order.client_name}</h3>
             <p><strong>ID:</strong> ${order.id}</p>
             <ul>${order.items.map(i => `<li>${i.name} - $${i.price}</li>`).join("")}</ul>
-            <img src="/static/qrcodes/${order.qr_filename}" alt="QR de ${order.client_name}">
+            <ul>${order.items.map(i => `<li>${i.name} - $${i.price}</li>`).join("")}</ul>
+            <img src="data:image/png;base64,${order.qr_base64}" alt="QR de ${order.client_name}">
           `;
                     ordersContainer.appendChild(div);
                 });
@@ -132,7 +133,7 @@ function confirmOrder() {
         .then((data) => {
             if (data.success) {
                 document.getElementById("qrSection").classList.remove("hidden");
-                document.getElementById("qrImage").src = `/static/qrcodes/${data.qr_filename}`;
+                document.getElementById("qrImage").src = `data:image/png;base64,${data.qr_base64}`;
                 alert(`✅ Pedido confirmado. Total: $${data.total.toFixed(2)}`);
                 cart = [];
                 renderCart();
@@ -167,7 +168,10 @@ function loadOrders() {
           <ul>${order.items
                         .map((item) => `<li>${item.name} - $${item.price}</li>`)
                         .join("")}</ul>
-          <img src="/static/qrcodes/${order.qr_filename}" class="order-qr">
+          <ul>${order.items
+                        .map((item) => `<li>${item.name} - $${item.price}</li>`)
+                        .join("")}</ul>
+          <img src="data:image/png;base64,${order.qr_base64}" class="order-qr">
         `;
                 container.appendChild(div);
             });

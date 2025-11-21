@@ -16,3 +16,4 @@ simplejson==3.19.2
 # --- Desarrollo y debugging ---
 flask-cors==4.0.0  # Permite comunicación JS ↔ Flask sin errores de CORS
 python-dotenv==1.0.1  # (Opcional) Para manejar variables de entorno
+pymongo==4.15.4 # Driver de MongoDB

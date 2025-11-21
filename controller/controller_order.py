@@ -28,11 +28,10 @@ class ControllerOrder:
         if not self.payment_service.process_payment(final_amount):
             return {"success": False, "message": "Pago fallido"}
 
-        # 3. Generate QR via Singleton Manager
+        # 3. Generate QR via Singleton Manager (Ephemeral Base64)
         qr_id = str(uuid.uuid4())[:8]
         qr_text = f"Orden: {qr_id} | Cliente: {client_name} | Total: ${final_amount:.2f}"
-        qr_filename = f"{qr_id}.png"
-        self.qr_manager.generate_qr(qr_text, qr_filename)
+        qr_base64 = self.qr_manager.generate_qr_base64(qr_text)
 
         # 4. Save Order via Repository
         new_order = {
@@ -40,7 +39,8 @@ class ControllerOrder:
             "client_name": client_name,
             "items": items,
             "total": final_amount,
-            "qr_filename": qr_filename
+            "qr_base64": qr_base64 # Store Base64 string directly or just regenerate on fly? 
+                                   # Storing it allows history to show it without regeneration.
         }
         orders = self.repo.load_all()
         orders.append(new_order)
@@ -49,4 +49,4 @@ class ControllerOrder:
         # 5. Notify Observers (Kitchen, Email, etc.)
         self.subject.new_order(qr_id)
 
-        return {"success": True, "qr_filename": qr_filename, "total": final_amount}
+        return {"success": True, "qr_base64": qr_base64, "total": final_amount}
