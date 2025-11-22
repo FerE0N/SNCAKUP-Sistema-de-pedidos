@@ -3,6 +3,7 @@ from services.qr_manager import QRCodeManager
 from services.observer import OrderSubject
 from services.strategies import DiscountStrategy, NoDiscount
 from services.payment_service import IPaymentService
+from services.logger_service import LoggerService
 import uuid
 
 class ControllerOrder:
@@ -16,6 +17,7 @@ class ControllerOrder:
         self.qr_manager = QRCodeManager() # Singleton instance
         self.subject = OrderSubject()
         self.discount_strategy: DiscountStrategy = NoDiscount()
+        self.logger = LoggerService()
 
     def set_discount_strategy(self, strategy: DiscountStrategy):
         self.discount_strategy = strategy
@@ -26,6 +28,7 @@ class ControllerOrder:
         
         # 2. Process Payment via Adapter
         if not self.payment_service.process_payment(final_amount):
+            self.logger.warning(f"Payment failed for order. Client: {client_name}", user=client_name)
             return {"success": False, "message": "Pago fallido"}
 
         # 3. Generate QR via Singleton Manager (Ephemeral Base64)
@@ -48,5 +51,7 @@ class ControllerOrder:
 
         # 5. Notify Observers (Kitchen, Email, etc.)
         self.subject.new_order(qr_id)
+
+        self.logger.info(f"Order created: #{qr_id} for {client_name} - Total: ${final_amount:.2f}", user=client_name)
 
         return {"success": True, "qr_base64": qr_base64, "total": final_amount}

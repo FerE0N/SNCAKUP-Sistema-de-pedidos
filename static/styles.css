@@ -1,12 +1,32 @@
 /* === Fuente general === */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Quicksand:wght@300;400;600;700&display=swap');
+
+:root {
+    /* Paleta Principal */
+    --color-primary: #575FFF;
+    --color-accent: #A357FF;
+    --color-tertiary: #57B3FF;
+
+    /* Paleta Semántica */
+    --color-success: #28A745;
+    --color-error: #DC3545;
+    --color-warning: #FFC107;
+
+    /* Fondos y Textos */
+    --bg-color: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-secondary: #666666;
+}
 
 body.bento-container {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f8f8;
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
     margin: 0;
     padding: 0;
-    padding-top: 140px;
+    padding-top: 100px;
+    /* Adjusted for fixed header */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,68 +35,44 @@ body.bento-container {
 /* 🎨 Header global fijo */
 header {
     width: 100%;
-    background: #ff914d;
+    background: var(--color-primary);
     color: white;
     text-align: center;
+    font-family: 'Lato', sans-serif;
     font-size: 1.8em;
-    font-weight: bold;
+    font-weight: 700;
     padding: 15px 0;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 
-/* === Navegación === */
-.bento-nav {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    background: #ffffff;
-    border-radius: 2rem;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-
-    /* ✅ Ajuste clave: se fija debajo del header */
-    position: fixed;
-    top: 70px;
-    /* altura del header */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 999;
+/* === Layout Principal (2 Columnas) === */
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    margin-top: 2rem;
 }
 
-.nav-btn {
-    background: #ff8360;
-    color: #fff;
-    border: none;
-    border-radius: 1rem;
-    padding: 0.5rem 1.2rem;
-    cursor: pointer;
-    font-weight: 500;
-    transition: 0.2s;
-}
-
-.nav-btn:hover {
-    background: #e86f4c;
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* === Secciones tipo Bento === */
 .bento-box {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 1.5rem;
     padding: 2rem;
-    margin-top: 2rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    width: 80%;
-    max-width: 900px;
     transition: all 0.3s ease;
-}
-
-.hidden {
-    display: none;
 }
 
 .bento-subbox {
@@ -86,58 +82,144 @@ header {
     margin-top: 1.5rem;
 }
 
-/* === Productos === */
-.product-item {
+/* === Tipografía === */
+h1,
+h2 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+h1 {
+    font-size: 28px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    /* SemiBold */
+    font-size: 20px;
+    color: var(--text-main);
+}
+
+p,
+label,
+input,
+select,
+button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 400;
+    /* Regular */
+    font-size: 16px;
+}
+
+.note,
+small {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 300;
+    /* Light */
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* === Filtros de Categoría === */
+.category-filters {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-btn {
     background: #fff;
+    border: 2px solid var(--color-tertiary);
+    color: var(--color-tertiary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    background: var(--color-tertiary);
+    color: white;
+}
+
+/* === Productos === */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.product-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
     border-radius: 0.8rem;
-    padding: 0.8rem 1.2rem;
-    margin-bottom: 0.75rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
 }
 
 .product-name {
-    font-weight: 600;
-    color: #333;
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
 }
 
 .product-price {
-    color: #666;
-    margin: 0 1rem;
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
 .btn-add {
-    background: #ff8360;
+    background: var(--color-accent);
     color: white;
     border: none;
     border-radius: 0.8rem;
-    padding: 0.4rem 0.9rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-weight: 600;
     transition: 0.2s;
+    width: 100%;
 }
 
 .btn-add:hover {
-    background: #e86f4c;
+    background: #8e44ad;
+    /* Darker accent */
 }
 
-.btn-remove {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    margin-left: 8px;
-    cursor: pointer;
-    padding: 2px 6px;
-    transition: 0.2s;
+/* === Sticky Cart === */
+#section-order {
+    position: sticky;
+    top: 90px;
+    /* Debajo del header */
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
 }
-
-.btn-remove:hover {
-    background-color: #e04646;
-}
-
 
 /* === Carrito === */
 #cart-items {
@@ -154,59 +236,130 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-left: 4px solid var(--color-tertiary);
 }
 
-/* === Confirmación === */
+.btn-remove {
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* === Botones Principales === */
 .btn-primary {
-    background: #5cb85c;
+    background: var(--color-primary);
     border: none;
     color: #fff;
-    padding: 0.7rem 1.5rem;
+    padding: 1rem;
     border-radius: 1rem;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 18px;
+    width: 100%;
     transition: 0.2s;
+    font-family: 'Lato', sans-serif;
 }
 
 .btn-primary:hover {
-    background: #4cae4c;
+    background: #4a52db;
 }
 
-/* === Texto y jerarquía === */
-h1 {
-    font-size: 1.7rem;
-    margin-bottom: 0.5rem;
-    color: #333;
+/* === Inputs === */
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
 }
 
-h2 {
-    font-size: 1.3rem;
-    color: #444;
+/* === QR Section === */
+#qrSection {
+    text-align: center;
+    background: var(--color-tertiary);
+    color: white;
+    position: relative;
 }
 
-h3 {
-    font-size: 1.1rem;
-    color: #555;
-}
-
-p,
-label,
-input {
-    font-size: 1rem;
-}
-
-/* === QR === */
 #qrImage {
     display: block;
-    margin-top: 1rem;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
     width: 150px;
-    height: 150px;
-    border-radius: 0.5rem;
-    border: 1px solid #ddd;
-    object-fit: cover;
+    border-radius: 1rem;
+    border: 4px solid white;
 }
 
+/* === Toast Notifications === */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+    min-width: 250px;
+}
+
+.toast.success {
+    border-left: 5px solid var(--color-success);
+}
+
+.toast.error {
+    border-left: 5px solid var(--color-error);
+}
+
+.toast.info {
+    border-left: 5px solid var(--color-tertiary);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* === Historial === */
 .orders-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -215,97 +368,651 @@ input {
 }
 
 .order-card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 1rem;
-    padding: 1rem 1.2rem;
+    padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transition: 0.3s ease;
+    border-top: 5px solid var(--color-primary);
 }
 
-.order-card:hover {
-    transform: translateY(-3px);
-}
-
-.order-header {
+.product-name {
+    display: block;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5rem;
+    color: var(--color-primary);
 }
 
-.order-items {
+.product-price {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.btn-add {
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 0.8rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-add:hover {
+    background: #8e44ad;
+    /* Darker accent */
+}
+
+/* === Sticky Cart === */
+#section-order {
+    position: sticky;
+    top: 90px;
+    /* Debajo del header */
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* === Carrito === */
+#cart-items {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0;
+    margin: 0;
 }
 
-.order-items li {
-    padding: 0.3rem 0;
-    color: #444;
-}
-
-.order-qr {
-    display: block;
-    width: 100px;
-    height: 100px;
-    margin-top: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid #ddd;
-}
-
-/* 🧱 Contenedor de tarjetas */
-.orders-container {
+#cart-items li {
+    background: #fff;
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 1rem;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 1.2rem;
-    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--color-tertiary);
 }
 
-/* 💳 Tarjeta individual */
-.order-card {
-    background-color: #ffffffcc;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.btn-remove {
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* === Botones Principales === */
+.btn-primary {
+    background: var(--color-primary);
+    border: none;
+    color: #fff;
     padding: 1rem;
-    width: 250px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 18px;
+    width: 100%;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
 }
 
-.order-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+.btn-primary:hover {
+    background: #4a52db;
 }
 
-/* 🖼 Imagen del QR */
-.order-card img {
-    display: block;
-    margin: 10px auto;
-    width: 120px;
-    border-radius: 8px;
+/* === Inputs === */
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
 }
 
-/* 🧾 Texto dentro de la tarjeta */
-.order-card h3 {
-    margin-bottom: 0.5rem;
-    color: #222;
+/* === QR Section === */
+#qrSection {
     text-align: center;
+    background: var(--color-tertiary);
+    color: white;
+    position: relative;
 }
 
-.order-card p {
-    margin: 0.3rem 0;
-    color: #333;
+#qrImage {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+    width: 150px;
+    border-radius: 1rem;
+    border: 4px solid white;
 }
 
-.order-card ul {
+/* === Toast Notifications === */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+    min-width: 250px;
+}
+
+.toast.success {
+    border-left: 5px solid var(--color-success);
+}
+
+.toast.error {
+    border-left: 5px solid var(--color-error);
+}
+
+.toast.info {
+    border-left: 5px solid var(--color-tertiary);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* === Historial === */
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.order-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-top: 5px solid var(--color-primary);
+}
+
+.product-name {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+}
+
+.product-price {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.btn-add {
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 0.8rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-add:hover {
+    background: #8e44ad;
+    /* Darker accent */
+}
+
+/* === Sticky Cart === */
+#section-order {
+    position: sticky;
+    top: 90px;
+    /* Debajo del header */
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* === Carrito === */
+#cart-items {
     list-style: none;
     padding: 0;
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
+    margin: 0;
 }
 
-.order-card li {
-    background: #f6f6f6;
-    padding: 4px 8px;
-    margin: 2px 0;
-    border-radius: 6px;
+#cart-items li {
+    background: #fff;
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--color-tertiary);
+}
+
+.btn-remove {
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* === Botones Principales === */
+.btn-primary {
+    background: var(--color-primary);
+    border: none;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 18px;
+    width: 100%;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.btn-primary:hover {
+    background: #4a52db;
+}
+
+/* === Inputs === */
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+}
+
+/* === QR Section === */
+#qrSection {
+    text-align: center;
+    background: var(--color-tertiary);
+    color: white;
+    position: relative;
+}
+
+#qrImage {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+    width: 150px;
+    border-radius: 1rem;
+    border: 4px solid white;
+}
+
+/* === Toast Notifications === */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+    min-width: 250px;
+}
+
+.toast.success {
+    border-left: 5px solid var(--color-success);
+}
+
+.toast.error {
+    border-left: 5px solid var(--color-error);
+}
+
+.toast.info {
+    border-left: 5px solid var(--color-tertiary);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* === Historial === */
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.order-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-top: 5px solid var(--color-primary);
+}
+
+.product-name {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+}
+
+.product-price {
+    display: block;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.btn-add {
+    background: var(--color-accent);
+    color: white;
+    border: none;
+    border-radius: 0.8rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+    width: 100%;
+}
+
+.btn-add:hover {
+    background: #8e44ad;
+    /* Darker accent */
+}
+
+/* === Sticky Cart === */
+#section-order {
+    position: sticky;
+    top: 90px;
+    /* Debajo del header */
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+/* === Carrito === */
+#cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#cart-items li {
+    background: #fff;
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--color-tertiary);
+}
+
+.btn-remove {
+    background-color: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* === Botones Principales === */
+.btn-primary {
+    background: var(--color-primary);
+    border: none;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 18px;
+    width: 100%;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.btn-primary:hover {
+    background: #4a52db;
+}
+
+/* === Inputs === */
+input[type="text"],
+input[type="password"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    margin-top: 0.5rem;
+}
+
+/* === QR Section === */
+#qrSection {
+    text-align: center;
+    background: var(--color-tertiary);
+    color: white;
+    position: relative;
+}
+
+#qrImage {
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+    height: auto;
+    width: 150px;
+    border-radius: 1rem;
+    border: 4px solid white;
+}
+
+/* === Toast Notifications === */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideIn 0.3s ease-out forwards;
+    min-width: 250px;
+}
+
+.toast.success {
+    border-left: 5px solid var(--color-success);
+}
+
+.toast.error {
+    border-left: 5px solid var(--color-error);
+}
+
+.toast.info {
+    border-left: 5px solid var(--color-tertiary);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* === Historial === */
+.orders-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.order-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-top: 5px solid var(--color-primary);
+}
+
+/* === Logout Button === */
+.btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--color-error);
+    color: white;
+    padding: 10px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy transition */
+    width: 24px;
+    /* Initial width (icon only) */
+    height: 24px;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
+}
+
+.btn-logout svg {
+    min-width: 24px;
+}
+
+.btn-logout .logout-text {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.btn-logout:hover {
+    width: 150px;
+    /* Expanded width */
+    padding: 10px 20px;
+    background: #c82333;
+}
+
+.btn-logout:hover .logout-text {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* === QR Code in History === */
+.order-qr {
+    max-width: 100%;
+    height: auto;
+    width: 120px;
+    /* Fixed width for consistency */
+    border-radius: 0.5rem;
+    border: 2px solid #eee;
+    margin-top: 1rem;
 }

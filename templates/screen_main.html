@@ -1,76 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <title>Sistema de Pedidos</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  <script src="{{ url_for('static', filename='order.js') }}" defer></script>
-</head>
+  <title>SNACKUP - Pedidos</title>
+  <!DOCTYPE html>
+  <html lang="es">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>SNACKUP - Pedidos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='order.js') }}" defer></script>
+  </head>
+
 <body class="bento-container">
 
   <!-- 🟠 HEADER GLOBAL -->
-  <header>SNACKUP</header>
+  <header>
+    <div class="header-content">
+      <!-- Spacer to center title -->
+      <div style="width: 40px;"></div>
 
-  <!-- 🧭 Barra de navegación -->
-  <nav class="bento-nav">
-    <button class="nav-btn" data-target="section-menu">Menú</button>
-    <button class="nav-btn" data-target="section-order">Confirmar Pedido</button>
-    <button class="nav-btn" data-target="section-history">Pedidos Registrados</button>
-  </nav>
+      <span class="header-title">SNACKUP</span>
 
-  <!-- 🧩 Sección 1: Menú principal -->
-  <section id="section-menu" class="bento-box active">
-    <h1>Menú de Productos</h1>
-    <div id="product-list" class="bento-subbox">
-      {% for product in products %}
-      <div class="product-item">
-        <span class="product-name">{{ product.get_description() }}</span>
-        <span class="product-price">${{ product.get_price() }}</span>
-        <button class="btn-add" data-name="{{ product.name }}" data-price="{{ product.get_price() }}">Agregar</button>
+      <!-- Logout Button (Top Right) -->
+      <a href="/logout" class="btn-logout-header" title="Cerrar Sesión">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+          <line x1="12" y1="2" x2="12" y2="12"></line>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="main-layout">
+
+    <!-- 👈 COLUMNA IZQUIERDA: MENÚ -->
+    <section id="section-menu" class="bento-box">
+      <h1>Menú</h1>
+      <p class="note">Selecciona los productos que deseas ordenar.</p>
+
+      <!-- Filtros -->
+      <div class="category-filters">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="food">Comidas</button>
+        <button class="filter-btn" data-filter="drink">Bebidas</button>
       </div>
-      {% endfor %}
-    </div>
 
-    <div class="bento-subbox">
-      <h2>Carrito actual</h2>
-      <ul id="cart-items"></ul>
-    </div>
-  </section>
+      <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card" data-type="{{ 'food' if 'Comida' in product.get_description() else 'drink' }}">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}">
+          <span class="product-name">{{ product.name }}</span>
+          <span class="product-price">${{ product.get_price() }}</span>
+          <button class="btn-add" data-name="{{ product.name }}" data-price="{{ product.get_price() }}">
+            Agregar +
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
 
-  <!-- 🧾 Sección 2: Confirmar pedido -->
-  <section id="section-order" class="bento-box hidden">
-    <h1>Confirmación de Pedido</h1>
-    <div class="bento-subbox">
-      <label for="clientName">Nombre del cliente:</label>
-      <input type="text" id="clientName" placeholder="Tu nombre" required>
-    </div>
-    <div class="bento-subbox">
-      <label for="discountType">Descuento:</label>
-      <select id="discountType">
-        <option value="none">Ninguno</option>
-        <option value="student">Estudiante (10%)</option>
-        <option value="happy_hour">Happy Hour (20%)</option>
-      </select>
-    </div>
-    <div class="bento-subbox">
-      <button id="btnConfirmOrder" class="btn-primary">Confirmar Pedido</button>
-    </div>
-    <div id="qrSection" class="bento-subbox hidden">
-      <h3>Tu código QR:</h3>
-      <img id="qrImage" alt="Código QR de pedido">
-    </div>
-  </section>
+    <!-- 👉 COLUMNA DERECHA: RESUMEN Y CONFIRMACIÓN -->
+    <section id="section-order" class="bento-box">
+      <h1>Mi Pedido</h1>
 
-  <!-- 📜 Sección 3: Historial de pedidos -->
-  <section id="section-history" class="bento-box hidden">
-    <h1>Pedidos Registrados</h1>
-    <div class="bento-subbox">
-      <button id="btnLoadOrders" class="btn-primary">Cargar pedidos</button>
-    </div>
-    <div class="orders-container" id="ordersContainer">
-      <p>No hay pedidos cargados aún.</p>
-    </div>
-  </section>
+      <!-- Carrito -->
+      <div class="bento-subbox">
+        <h3>Carrito</h3>
+        <ul id="cart-items">
+          <li class="note">Tu carrito está vacío.</li>
+        </ul>
+        <p style="text-align: right; font-weight: 700; margin-top: 1rem;">
+          Total estimado: <span id="cart-total">$0.00</span>
+        </p>
+      </div>
+
+      <!-- Datos del Cliente -->
+      <div class="bento-subbox">
+        <h3>Datos</h3>
+        <label for="clientName">Nombre:</label>
+        <input type="text" id="clientName" placeholder="Tu nombre" value="{{ username }}" readonly>
+        <small class="note">Sesión iniciada como {{ username }}</small>
+
+        <label for="discountType" style="margin-top: 1rem; display:block;">Descuento:</label>
+        <select id="discountType">
+          <option value="none">Ninguno</option>
+          <option value="student">Estudiante (10%)</option>
+          <option value="happy_hour">Happy Hour (20%)</option>
+        </select>
+      </div>
+
+      <!-- Botón Confirmar -->
+      <div style="margin-top: 2rem;">
+        <button id="btnConfirmOrder" class="btn-primary">Confirmar Pedido</button>
+      </div>
+
+      <!-- QR Result (Oculto inicialmente) -->
+      <div id="qrSection" class="bento-subbox hidden">
+        <h3>¡Pedido Confirmado!</h3>
+        <p>Muestra este código en caja:</p>
+        <img id="qrImage" alt="Código QR de pedido">
+        <button id="btnCloseQR" class="btn-add"
+          style="background: white; color: var(--color-tertiary); margin-top: 1rem;">Cerrar</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Sección Historial (Separada) -->
+  <div class="history-layout" style="width: 90%; max-width: 1200px; margin: 2rem auto;">
+    <section class="bento-box">
+      <h2>Historial de Pedidos</h2>
+      <button id="btnLoadOrders" class="btn-add" style="width: auto; background: var(--color-tertiary);">Actualizar
+        Historial</button>
+      <div class="orders-container" id="ordersContainer">
+        <p class="note">Carga los pedidos para ver el historial.</p>
+      </div>
+    </section>
+  </div>
 
 </body>
+
 </html>

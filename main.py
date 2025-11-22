@@ -3,6 +3,11 @@ import os
 
 # Importamos las abstracciones y las clases
 from controller.controller_product import ControllerProduct
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+import os
+
+# Importamos las abstracciones y las clases
+from controller.controller_product import ControllerProduct
 from controller.controller_order import ControllerOrder
 from controller.auth_controller import AuthController
 from repository.mongo_order_repository import MongoOrderRepository
@@ -10,6 +15,7 @@ from services.payment_service import PayPalAdapter
 from services.observer import KitchenObserver, EmailObserver
 from services.strategies import NoDiscount, StudentDiscount, HappyHourDiscount
 from services.mongo_connection import MongoConnection
+from services.logger_service import LoggerService
 
 app = Flask(__name__)
 app.secret_key = "SUPER_SECRET_KEY" # Needed for session
@@ -35,6 +41,9 @@ kitchen_observer = KitchenObserver()
 email_observer = EmailObserver()
 controller_order.subject.attach(kitchen_observer)
 controller_order.subject.attach(email_observer)
+
+# 5. Logger
+logger = LoggerService()
 
 # ---------------------------------------------------------
 
@@ -72,6 +81,9 @@ def register():
 
 @app.route('/logout')
 def logout():
+    username = session.get('username')
+    if username:
+        logger.info(f"User logged out: {username}", user=username)
     session.pop('username', None)
     return redirect(url_for('login'))
 
@@ -110,15 +122,28 @@ def confirm_order():
         controller_order.set_discount_strategy(NoDiscount())
 
     # Create Order
-    result = controller_order.create_order(client_name, items, total_amount)
-    
-    return jsonify(result)
+    try:
+        result = controller_order.create_order(client_name, items, total_amount)
+        return jsonify(result)
+    except Exception as e:
+        logger.error(f"ERROR in confirm_order: {e}", user=client_name, details={"error": str(e)})
+        print(f"ERROR in confirm_order: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "message": f"Error interno: {str(e)}"}), 500
 
 @app.route("/get_orders", methods=["GET"])
 @login_required
 def get_orders():
-    orders = order_repository.load_all()
-    return jsonify(orders)
+    try:
+        orders = order_repository.load_all()
+        return jsonify(orders)
+    except Exception as e:
+        logger.error(f"ERROR in get_orders: {e}", user=session.get('username'), details={"error": str(e)})
+        print(f"ERROR in get_orders: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"success": False, "message": f"Error al cargar historial: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
