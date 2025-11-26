@@ -55,3 +55,11 @@ class ControllerOrder:
         self.logger.info(f"Order created: #{qr_id} for {client_name} - Total: ${final_amount:.2f}", user=client_name)
 
         return {"success": True, "qr_base64": qr_base64, "total": final_amount}
+
+    def get_all_orders(self):
+        return self.repo.load_all()
+
+    def get_orders_by_user(self, username: str):
+        all_orders = self.repo.load_all()
+        # Filter orders where 'client_name' matches the username
+        return [order for order in all_orders if order.get('client_name') == username]

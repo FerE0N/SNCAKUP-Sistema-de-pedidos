@@ -80,3 +80,20 @@ Corregida la violación del Principio de Inversión de Dependencias (DIP); los m
 - **OOP Concepts**:
   - **Encapsulación**: Los controladores gestionan su propio estado y lógica interna.
   - **Polimorfismo**: Las estrategias de descuento y los adaptadores de pago comparten interfaces comunes pero comportamientos distintos.
+
+## v5.1.0 - 2025-11-25
+### Added
+- **Console Interaction System (CLI)**: Nuevo script `console_app.py` para pruebas rápidas e interacción vía terminal.
+  - **Login/Registro**: Flujo completo de autenticación reutilizando `AuthController`.
+  - **Gestión de Órdenes**: Menú interactivo, selección de productos, aplicación de descuentos y confirmación.
+  - **Historial Filtrado**: Visualización de pedidos específicos del usuario logueado.
+- **Model Enhancements**:
+  - Agregada propiedad `category` a las clases `Food` y `Drink` en `model/product.py` para soporte en CLI.
+- **Controller Features**:
+  - Nuevo método `get_orders_by_user(username)` en `ControllerOrder` para filtrar el historial.
+
+### Changed
+- **Refactorización de Modelos**: `Food` y `Drink` ahora exponen explícitamente su categoría, facilitando la visualización en interfaces de texto.
+
+### Testing
+- Verificación manual exitosa de todos los flujos (Auth, Orden, Historial) a través de la consola.

@@ -40,6 +40,10 @@ class Food(Product):
     def get_description(self) -> str:
         return f"Comida: {self._name}"
 
+    @property
+    def category(self):
+        return "Comida"
+
 class Drink(Product):
     """Concrete implementation of Product for Drink items."""
     def get_price(self) -> float:
@@ -47,3 +51,7 @@ class Drink(Product):
 
     def get_description(self) -> str:
         return f"Bebida: {self._name}"
+
+    @property
+    def category(self):
+        return "Bebida"
