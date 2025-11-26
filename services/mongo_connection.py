@@ -16,10 +16,23 @@ class MongoConnection:
         return cls._instance
 
     def _initialize(self):
-        # Assuming local MongoDB instance 
-        self._client = MongoClient("mongodb://localhost:27017/")
+        # MongoDB Atlas Connection
+        username = "falcnss21_db_user"
+        password = "K8RdgJ6Rujx1WqB0"
+        cluster_url = "cluster0.zlirjz3.mongodb.net"
+        
+        uri = f"mongodb+srv://{username}:{password}@{cluster_url}/?retryWrites=true&w=majority&appName=Cluster0"
+        try:
+            self._client = MongoClient(uri)
+            # Trigger a connection check
+            self._client.admin.command('ping')
+            print(f"[MongoConnection] ✅ Connected to MongoDB Atlas: {cluster_url}")
+        except Exception as e:
+            print(f"[MongoConnection] ❌ Failed to connect to Atlas: {e}")
+            print("   Using localhost as fallback...")
+            self._client = MongoClient("mongodb://localhost:27017/")
+            
         self._db = self._client["snackup_db"]
-        print("[MongoConnection] Connected to MongoDB: snackup_db")
 
     @property
     def db(self):

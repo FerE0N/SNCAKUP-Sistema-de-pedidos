@@ -3,11 +3,6 @@ import os
 
 # Importamos las abstracciones y las clases
 from controller.controller_product import ControllerProduct
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-import os
-
-# Importamos las abstracciones y las clases
-from controller.controller_product import ControllerProduct
 from controller.controller_order import ControllerOrder
 from controller.auth_controller import AuthController
 from repository.mongo_order_repository import MongoOrderRepository
@@ -136,7 +131,8 @@ def confirm_order():
 @login_required
 def get_orders():
     try:
-        orders = order_repository.load_all()
+        current_user = session.get('username')
+        orders = controller_order.get_orders_by_user(current_user)
         return jsonify(orders)
     except Exception as e:
         logger.error(f"ERROR in get_orders: {e}", user=session.get('username'), details={"error": str(e)})

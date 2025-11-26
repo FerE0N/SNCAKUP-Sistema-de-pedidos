@@ -97,3 +97,18 @@ Corregida la violación del Principio de Inversión de Dependencias (DIP); los m
 
 ### Testing
 - Verificación manual exitosa de todos los flujos (Auth, Orden, Historial) a través de la consola.
+
+## v5.2.1 - 2025-11-26
+### Changed
+- **Database Migration**: Migración exitosa de MongoDB Local a **MongoDB Atlas** (Cloud).
+  - Actualizado `MongoConnection` para usar credenciales y cluster de Atlas.
+- **Product Controller Refactor**: `ControllerProduct` ahora obtiene los productos dinámicamente de la base de datos en lugar de usar una lista estática hardcodeada.
+- **Web Routes Fixes**:
+  - Reparada la ruta `/get_orders` en `main.py` para filtrar correctamente el historial por el usuario logueado (`get_orders_by_user`).
+  - Restaurado el manejo de errores y `traceback` en `/confirm_order`.
+
+### Added
+- **Data Seeding**: Scripts temporales (`seed_products.py`, `import_to_atlas.py`) utilizados para poblar la base de datos en la nube con los datos existentes.
+
+### Fixed
+- **History Privacy**: Corregido bug donde el historial web mostraba las órdenes de todos los usuarios. Ahora respeta la sesión actual.
